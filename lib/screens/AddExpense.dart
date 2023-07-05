@@ -140,6 +140,7 @@ class _AddExpenseState extends State<AddExpense> {
                           child: TextField(
                             controller: t2,
                             focusNode: _focus2,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               icon: Icon(Icons.format_indent_decrease),

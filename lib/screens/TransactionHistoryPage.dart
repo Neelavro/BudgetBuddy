@@ -74,15 +74,17 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                             total.value = total.value + int.parse(expenseMap[index]["payment"]);
                             sum.value = sum.value - int.parse(expenseMap[index]["payment"]);
                             removeTransaction(expenseMap[index]);
+                            setState(() {
+                            });
                           }
                           if(expenseMap[index]["type"] == "income"){
                             //print("income");
                             total.value = total.value - int.parse(expenseMap[index]["payment"]);
                             income.value = income.value - int.parse(expenseMap[index]["payment"]);
                             removeTransaction(expenseMap[index]);
+                            setState(() {
+                            });
                           }
-                          setState(() {
-                          });
                           } ,
                           icon: Icon(Icons.delete_forever_rounded,color: primarycolor,),
                         )
