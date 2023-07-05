@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-class AddExpense extends StatefulWidget {
-  const AddExpense({Key? key}) : super(key: key);
+class AddIncome extends StatefulWidget {
+  const AddIncome({Key? key}) : super(key: key);
 
   @override
-  State<AddExpense> createState() => _AddExpenseState();
+  State<AddIncome> createState() => _AddIncomeState();
 }
 
-class _AddExpenseState extends State<AddExpense> {
+class _AddIncomeState extends State<AddIncome> {
   TextEditingController t1 = new TextEditingController();
   TextEditingController t2 = new TextEditingController();
- 
+
   FocusNode _focus = new FocusNode();
   FocusNode _focus2 = new FocusNode();
   void _onFocusChange() {
@@ -28,7 +28,7 @@ class _AddExpenseState extends State<AddExpense> {
     super.initState();
     _focus.addListener(_onFocusChange);
     _focus2.addListener(_onFocusChange);
-   
+
 
   }
 
@@ -37,17 +37,17 @@ class _AddExpenseState extends State<AddExpense> {
     super.dispose();
     _focus.removeListener(_onFocusChange);
     _focus2.removeListener(_onFocusChange);
-    
+
     _focus.dispose();
     _focus2.dispose();
-    
 
 
-  @override
-  Widget build(BuildContext context) {
-    return Container();
+
+    @override
+    Widget build(BuildContext context) {
+      return Container();
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +71,13 @@ class _AddExpenseState extends State<AddExpense> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Add Your Expenses!",style: TextStyle(color: Colors.black, fontSize: 24,fontWeight: FontWeight.bold),),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding:  EdgeInsets.symmetric(vertical: 20),
-                        child: Container(
+                  Text("Add Your Incomes!",style: TextStyle(color: Colors.black, fontSize: 24,fontWeight: FontWeight.bold),),
+                  Padding(
+                    padding: const EdgeInsets.only(top:40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.only(left: 10),
                           decoration: BoxDecoration(
@@ -96,7 +96,7 @@ class _AddExpenseState extends State<AddExpense> {
                             ],
                           ),
                           width: MediaQuery.of(context).size.width*.7,
-                          height: MediaQuery.of(context).size.height*.08,
+                          height: MediaQuery.of(context).size.height*.07,
 
                           child: TextField(
                             controller: t1,
@@ -107,16 +107,16 @@ class _AddExpenseState extends State<AddExpense> {
                             ),
                           ),
                         ),
-                      ),
-                      Icon(Icons.list_alt_rounded,size: 45,color: Colors.red,)
-                    ],
+                        Icon(Icons.list_alt_rounded,size: 45,color: Colors.red,)
+                      ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding:  EdgeInsets.symmetric(vertical: 20),
-                        child: Container(
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40.0, bottom: 70),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.only(left: 10),
                           decoration: BoxDecoration(
@@ -135,7 +135,7 @@ class _AddExpenseState extends State<AddExpense> {
                             ],
                           ),
                           width: MediaQuery.of(context).size.width*.7,
-                          height: MediaQuery.of(context).size.height*.08,
+                          height: MediaQuery.of(context).size.height*.07,
 
                           child: TextField(
                             controller: t2,
@@ -147,25 +147,31 @@ class _AddExpenseState extends State<AddExpense> {
                             ),
                           ),
                         ),
-                      ),
-                      Icon(Icons.attach_money_rounded,size: 45,color: Colors.blue,)
-                    ],
+                        Text("BDT",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                            fontSize: 20
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   InkWell(
                     onTap: () async {
                       print(t1.value.text);
                       print(t2.value.text);
-                      addExpensse({"type": "expense", "categoryName" : t1.value.text, "payment" : t2.value.text});
-                      sum.value = sum.value + int.parse(t2.value.text);
-                      total.value = total.value - int.parse(t2.value.text);
-                      Navigator.pop(context,sum.value);
+                      addIncome({"type": "income", "categoryName" : t1.value.text, "payment" : t2.value.text});
+                      income.value = income.value + int.parse(t2.value.text);
+                      total.value = total.value + int.parse(t2.value.text);
+                      Navigator.pop(context,income.value);
 
                     },
                     child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: primarycolor,
+                          color: primarycolor ,
                           boxShadow:  [
                             BoxShadow(
                               color: Colors.grey,
