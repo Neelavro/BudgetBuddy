@@ -157,9 +157,9 @@ class _AddExpenseState extends State<AddExpense> {
                       print(t1.value.text);
                       print(t2.value.text);
                       addExpensse({"type": "expense", "categoryName" : t1.value.text, "payment" : t2.value.text});
-                      sum.value = sum.value + int.parse(t2.value.text);
+                      expense.value = expense.value + int.parse(t2.value.text);
                       total.value = total.value - int.parse(t2.value.text);
-                      Navigator.pop(context,sum.value);
+                      Navigator.pop(context,expense.value);
 
                     },
                     child: Container(

@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class AddIncome extends StatefulWidget {
-  const AddIncome({Key? key}) : super(key: key);
+  String selectedDay;
+   AddIncome(this.selectedDay) : super();
 
   @override
   State<AddIncome> createState() => _AddIncomeState();
 }
 
 class _AddIncomeState extends State<AddIncome> {
+  String expenseType = "addExpense";
+  bool toggle = true;
   TextEditingController t1 = new TextEditingController();
   TextEditingController t2 = new TextEditingController();
 
@@ -107,7 +110,23 @@ class _AddIncomeState extends State<AddIncome> {
                             ),
                           ),
                         ),
-                        Icon(Icons.list_alt_rounded,size: 45,color: Colors.red,)
+                       InkWell(onTap:(){
+
+                         setState(() {
+                           toggle ? toggle =  false: toggle = true;
+                         });
+                       },
+                           child:  Container(
+                             alignment: Alignment.center,
+                             color: toggle ==  true? Colors.red: Colors.green,
+                             height: 50,
+                             width: 50,
+                             child: toggle ==  true? Text(
+                               "-",style: TextStyle(color: Colors.white,fontSize: 40),):
+                             Text("+",style: TextStyle(color: Colors.white,fontSize: 30),
+                           )
+                       ),
+                       )
                       ],
                     ),
                   ),
@@ -162,10 +181,13 @@ class _AddIncomeState extends State<AddIncome> {
                     onTap: () async {
                       print(t1.value.text);
                       print(t2.value.text);
-                      addIncome({"type": "income", "categoryName" : t1.value.text, "payment" : t2.value.text});
-                      income.value = income.value + int.parse(t2.value.text);
-                      total.value = total.value + int.parse(t2.value.text);
-                      Navigator.pop(context,income.value);
+                      toggle == true? addExpensse({"date": widget.selectedDay,"type": "expense", "categoryName" : t1.value.text, "payment" : t2.value.text})
+                      :addIncome({"date": widget.selectedDay,"type": "income", "categoryName" : t1.value.text, "payment" : t2.value.text});
+                      toggle == true? expense.value = expense.value + int.parse(t2.value.text)
+                      :income.value = income.value + int.parse(t2.value.text);
+                      toggle == true? total.value = total.value - int.parse(t2.value.text)
+                      :total.value = total.value + int.parse(t2.value.text);
+                      Navigator.pop(context,toggle);
 
                     },
                     child: Container(
