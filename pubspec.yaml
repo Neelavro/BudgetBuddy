@@ -33,6 +33,10 @@ dependencies:
   scaffold_gradient_background: ^1.0.3+1
   table_calendar: ^3.0.9
   intl: ^0.18.1
+  fl_chart: ^0.60.0
+  http: ^0.13.5
+  mvc_pattern: ^8.12.0
+
   flutter:
     sdk: flutter
 

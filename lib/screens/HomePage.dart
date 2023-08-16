@@ -1,7 +1,12 @@
+import 'package:budget_buddy/Repositories/ExpenseIncome.dart';
 import 'package:budget_buddy/screens/AddExpense.dart';
 import 'package:budget_buddy/screens/AddIncome.dart';
+import 'package:budget_buddy/screens/Login.dart';
+import 'package:budget_buddy/screens/Main.dart';
 import 'package:budget_buddy/screens/TransactionHistoryPage.dart';
+import 'package:budget_buddy/screens/UserProfile.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -15,18 +20,29 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  late TabController _controller;
   String currentDate = '';
+  bool toggle = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    print(allexpenseincomeMap);
     totalExpenses();
     totalIncome();
-    _selectedDate = _focusedDay;
+    eventLoader(allexpenseincomeMap);
+    currentDate = _focusedDay.toString();
+    print(currentDate);
+    expenseTracker(allexpenseincomeMap);
+    incomeTracker(allexpenseincomeMap);
+    _controller = new TabController(length: 3, vsync: this, initialIndex: 0)
+      ..addListener(() {});
+    //print(_focusedDay);
     setState(() {
     });
   }
+
   // Widget totalExpenses(){
   //   int sum_of_expenses = 0;
   //   int result = 0;
@@ -51,9 +67,127 @@ class _HomePageState extends State<HomePage> {
   CalendarFormat _calendarFormat =  CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
+  final titleController = TextEditingController();
+  final descpController = TextEditingController();
+
+  addIncomeOExpense() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Add Expense/Income',
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            TextField(
+              controller: titleController,
+              textCapitalization: TextCapitalization.words,
+              decoration: const InputDecoration(
+                labelText: 'Expense/Income',
+              ),
+            ),
+            TextField(
+              controller: descpController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: '0.0'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            child: const Text('Add Expense'),
+            onPressed: () {
+              if (titleController.text.isEmpty &&
+                  descpController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Required title and description'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+                //Navigator.pop(context);
+                return;
+              } else {
+
+                expense.value = expense.value + int.parse(descpController.value.text);
+                total.value = total.value - int.parse(descpController.value.text);
+                //weekdayExpenseAmount(_selectedDate.toString().substring(0,10), descpController.value.text);
+                addExpensse({"userId": UserId.value,"type": "Expense","categoryName": titleController.value.text,"payment": int.parse(descpController.value.text),"date": currentDate});
+                eventLoader(allexpenseincomeMap);
+                print("currentDate: $currentDate");
+                postIncomeExpense(UserId.value, "Expense", titleController.value.text, descpController.value.text, currentDate);
+                weekdayExpenseAmount(currentDate.substring(0,10), descpController.value.text);
+                getAllIncomeExpense(UserId.value);
+                eventLoader(allexpenseincomeMap);
+                weekdayExpenseAmount(currentDate.substring(0,10), descpController.value.text);
+                //incomeTracker(allexpenseincomeMap);
+
+                setState(() {
+                });
+
+                titleController.clear();
+                descpController.clear();
+                Navigator.pop(context);
+                return;
+              }
+            },
+          ),
+          TextButton(
+            child: const Text('Add Income'),
+            onPressed: () {
+              if (titleController.text.isEmpty &&
+                  descpController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Required title and description'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+                //Navigator.pop(context);
+                return;
+              } else {
+                print(titleController.text);
+                print(descpController.text);
+                income.value = income.value + int.parse(descpController.value.text);
+                total.value = total.value + int.parse(descpController.value.text);
+                addIncome({"userId": UserId.value,"type": "Expense","categoryName": titleController.value.text,"payment": int.parse(descpController.value.text),"date": currentDate});
+                eventLoader(allexpenseincomeMap);
+                postIncomeExpense(UserId.value, "Income", titleController.value.text, descpController.value.text, currentDate);
+                weekdayIncomeAmount(currentDate.toString().substring(0,10), descpController.value.text);
+                getAllIncomeExpense(UserId.value);
+
+                eventLoader(allexpenseincomeMap);
+                _selectedDate = _focusedDay;
+                //expenseTracker(allexpenseincomeMap);
+
+                setState(() {
+                });
+
+                titleController.clear();
+                descpController.clear();
+                Navigator.pop(context);
+                return;
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+  int _currentTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    _controller.animateTo(_currentTabIndex);
     return WillPopScope(
       onWillPop: ()async{
         return false;
@@ -63,236 +197,52 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: secondarycolor,
-          title: Text(
-          "Budget Budddy",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+              "Budget Budddy",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold
+              ),
+              ),
+              Container(
+                width: 50,
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile()));
+                  },
+                    child: Icon(Icons.person,size: 40,)
+                ),
+              ),
+            ],
           ),
+          bottom: TabBar(
+            controller: _controller,
+            tabs: [
+              Text("MAIN"),
+              Text("CALENDER"),
+              Text("TRANSACTION HISTORY"),
+
+            ],
           ),
         ),
-        body: SingleChildScrollView(
-          //physics: NeverScrollableScrollPhysics(),
-          child: Container(
-            padding: EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  height: 200,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    color: primarycolor,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow:  [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(
-                          0,
-                          2.0,
-                        ),
-                        blurRadius: 3.0,
-                        spreadRadius: 1.0,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Total Balance",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text("${total.value}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 35,
-                        ),
-                      ),
-                      Padding(
-                        padding:  EdgeInsets.only(top: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Income",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(x == false?"BDT${income.value}" :"BDT${income.value}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Expense",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(x == false?"BDT${expense.value}" :"BDT${expense.value}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                                //
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+        body: TabBarView(
+          controller: _controller,
+          children: [
+          MainPage(),
+            EventCalendarScreen(),
+          TransactionHistory(),
 
-                ),
-                Padding(
-                  padding:  EdgeInsets.only(top: 20.0),
-                  child: Container(
-                    height: 350,
-                    width: 400,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow:  [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(
-                            0,
-                            2.0,
-                          ),
-                          blurRadius: 3.0,
-                          spreadRadius: 1.0,
-                        ),
-                      ],
-                    ),
-                    child: TableCalendar(
-                        focusedDay: _focusedDay, firstDay: DateTime(2000), lastDay: DateTime(2222),
-                      calendarFormat: _calendarFormat,
-                      onDaySelected: (selectedDay, focusedDay) {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => EventCalendarScreen()));
-                      },
-                      selectedDayPredicate: (day) {
-                        return isSameDay(_selectedDate, day);
-                      },
 
-                    ),
-                  ),
-                ),
+        ],
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 20,bottom: 20),
-                      child: Text("Transaction History:",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async {expense.value = await  Navigator.push(context, MaterialPageRoute(builder: (context) => TransactionHistory()));
-                        setState(() {
-                        });
-                        },
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 20,bottom: 20),
-                        child: Text("See all",
-                          style: TextStyle(
-                            color: primarycolor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height *.4,
-                  child: ListView.builder(
-                    //reverse: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: expenseMap.length,
-                      itemBuilder: (context, index){
-                        return expenseMap.length == 0? Container(): Padding(
-                          padding:  EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(expenseMap[index]["categoryName"],
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  expenseMap[index]["type"] == "expense"?
-                                  Text("-${expenseMap[index]["payment"]} BDT",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 20,
-                                    ),
-                                  ):Text("+${expenseMap[index]["payment"]} BDT",
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 20,
-                                    ),
-                                  ) ,
-                                  IconButton(onPressed:(){
-                                    if(expenseMap[index]["type"] == "expense"){
-                                      //print("expense");
-                                      total.value = total.value + int.parse(expenseMap[index]["payment"]);
-                                      expense.value = expense.value - int.parse(expenseMap[index]["payment"]);
-                                      removeTransaction(expenseMap[index]);
-                                      setState(() {});
-
-                                    }
-                                    if(expenseMap[index]["type"] == "income"){
-                                      //print("income");
-                                      total.value = total.value - int.parse(expenseMap[index]["payment"]);
-                                      income.value = income.value - int.parse(expenseMap[index]["payment"]);
-                                      removeTransaction(expenseMap[index]);
-                                      setState(() {
-                                      });
-                                    }
-                                  } ,
-                                    icon: Icon(Icons.delete_forever_rounded,color: primarycolor,),
-                                  )
-                                ],
-                              ),
-
-                            ],
-                          ),
-                        );
-                      },
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: ()async{
-            bool x = await  Navigator.push(context, MaterialPageRoute(builder: (context) => AddIncome(_focusedDay.toString().substring(0,10))));
+            addIncomeOExpense();
+            //bool x = await  Navigator.push(context, MaterialPageRoute(builder: (context) => AddIncome(_focusedDay.toString().substring(0,10))));
             setState(() {
             });
           },

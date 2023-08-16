@@ -1,4 +1,6 @@
+import 'package:budget_buddy/Repositories/UserRepository.dart';
 import 'package:budget_buddy/screens/LandingPage.dart';
+import 'package:budget_buddy/screens/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
 
@@ -21,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   _navigatetoHome() async {
     await Future.delayed(Duration(milliseconds: 1500),(){});
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LandingPage()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
   }
   @override
   Widget build(BuildContext context) {

@@ -16,100 +16,80 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: ()async{
-        if(expenseMap.length == 0){
+        if(allexpenseincomeMap.length == 0){
           print("0");
           Navigator.pop(context, expense.value);
         }
-        else if(expenseMap[mapIndex]["type"] == "income"){
+        else if(allexpenseincomeMap[mapIndex]["type"] == "income"){
           Navigator.pop(context, income.value);
         }
-        else if(expenseMap[mapIndex]["type"] == "expense") {
+        else if(allexpenseincomeMap[mapIndex]["type"] == "expense") {
           Navigator.pop(context, expense.value);
         }
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: primarycolor,
-          leading: InkWell(
-            onTap: (){
-              if(expenseMap.length == 0){
-                print("0");
-                Navigator.pop(context, expense.value);
-              }
-              else if(expenseMap[mapIndex]["type"] == "income"){
-                Navigator.pop(context, income.value);
-              }
-              else if(expenseMap[mapIndex]["type"] == "expense") {
-                Navigator.pop(context, expense.value);
-              }
-
-
-              print("asd");
-              print(expense.value);
-            },
-            child: Icon(Icons.arrow_back_ios),
-          ),
-          title: Text("Transaction History"),
-          toolbarHeight: 100,
-          elevation: 0,
-        ),
         body: Padding(
           padding:  EdgeInsets.only(left: 10.0),
           child: Container(
             height: MediaQuery.of(context).size.height *.8,
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
-              itemCount: expenseMap.length,
+              itemCount: allexpenseincomeMap.length,
               itemBuilder: (context, index){
                 return Padding(
                   padding:  EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     children: [
-                      Text(expenseMap[index]["categoryName"],
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                      ),
+
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          expenseMap[index]["type"] == "expense"?
-                          Text("-${expenseMap[index]["payment"]} BDT",
+                          Text(allexpenseincomeMap[index]["categoryName"],
                             style: TextStyle(
-                              color: Colors.red,
+                              color: Colors.black,
                               fontSize: 20,
                             ),
-                          ):Text("+${expenseMap[index]["payment"]} BDT",
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 20,
-                            ),
-                          ) ,
-                          IconButton(onPressed:(){
-                            if(expenseMap[index]["type"] == "expense"){
-                              //print("expense");
-                              total.value = total.value + int.parse(expenseMap[index]["payment"]);
-                              expense.value = expense.value - int.parse(expenseMap[index]["payment"]);
-                              removeTransaction(expenseMap[index]);
-                              setState(() {
-                              });
-                            }
-                            if(expenseMap[index]["type"] == "income"){
-                              //print("income");
-                              total.value = total.value - int.parse(expenseMap[index]["payment"]);
-                              income.value = income.value - int.parse(expenseMap[index]["payment"]);
-                              removeTransaction(expenseMap[index]);
-                              setState(() {
-                              });
-                            }
-                            } ,
-                            icon: Icon(Icons.delete_forever_rounded,color: primarycolor,),
-                          )
+                          ),
+                          Row(
+                            children: [
+                              allexpenseincomeMap[index]["type"] == "Expense"?
+                              Text("-${allexpenseincomeMap[index]["payment"]} BDT",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                ),
+                              ):Text("+${allexpenseincomeMap[index]["payment"]} BDT",
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 20,
+                                ),
+                              ) ,
+                              IconButton(onPressed:(){
+                                if(allexpenseincomeMap[index]["type"] == "Expense"){
+                                  //print("expense");
+                                  total.value = total.value + int.parse(allexpenseincomeMap[index]["payment"]);
+                                  expense.value = expense.value - int.parse(allexpenseincomeMap[index]["payment"]);
+                                  removeTransaction(allexpenseincomeMap[index]);
+                                  setState(() {
+                                  });
+                                }
+                                if(allexpenseincomeMap[index]["type"] == "Income"){
+                                  //print("income");
+                                  total.value = total.value - int.parse(allexpenseincomeMap[index]["payment"]);
+                                  income.value = income.value - int.parse(allexpenseincomeMap[index]["payment"]);
+                                  removeTransaction(allexpenseincomeMap[index]);
+                                  setState(() {
+                                  });
+                                }
+                                } ,
+                                icon: Icon(Icons.delete_forever_rounded,color: primarycolor,),
+                              )
+                            ],
+                          ),
+
                         ],
                       ),
-
                     ],
                   ),
                 );

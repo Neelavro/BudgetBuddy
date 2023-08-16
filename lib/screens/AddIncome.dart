@@ -188,6 +188,7 @@ class _AddIncomeState extends State<AddIncome> {
                       toggle == true? total.value = total.value - int.parse(t2.value.text)
                       :total.value = total.value + int.parse(t2.value.text);
                       Navigator.pop(context,toggle);
+                      eventLoader(allexpenseincomeMap);
 
                     },
                     child: Container(

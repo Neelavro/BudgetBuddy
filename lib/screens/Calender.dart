@@ -28,18 +28,36 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     // TODO: implement initState
     super.initState();
     _selectedDate = _focusedDay;
+    //eventLoader(expenseMap);
 
   }
+  List _listOfDayEvents(DateTime dateTime) {
+    if (selectedExpenseMap[DateFormat('yyyy-MM-dd').format(dateTime)] != null) {
+      return selectedExpenseMap[DateFormat('yyyy-MM-dd').format(dateTime)]!;
+    } else {
+      return [];
+    }
+  }
+
+
 
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Event Calendar Example'),
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: secondarycolor,
+      //   title: Text(
+      //     "Expense/Income Calender",
+      //     style: TextStyle(
+      //         color: Colors.white,
+      //         fontWeight: FontWeight.bold
+      //     ),
+      //   ),
+      //
+      // ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: Column(
@@ -74,18 +92,20 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
               // No need to call `setState()` here
               _focusedDay = focusedDay;
             },
+            eventLoader: _listOfDayEvents,
 
         ),
 
+
         Container(
-          height: MediaQuery.of(context).size.height*.5,
+          height: MediaQuery.of(context).size.height*.43,
           width: MediaQuery.of(context).size.width,
           child:ListView.builder(
             //reverse: true,
             //physics: NeverScrollableScrollPhysics(),
-            itemCount: expenseMap.length,
+            itemCount: allexpenseincomeMap.length,
             itemBuilder: (context, index){
-              return currentDate.toString() == expenseMap[index]['date'] ? Padding(
+              return currentDate.toString() == allexpenseincomeMap[index]['date'].toString().substring(0,10) || _focusedDay.toString().substring(0,10) ==  allexpenseincomeMap[index]['date'] ? Padding(
                 padding:  EdgeInsets.only(top: 10.0),
                 child: Container(
                   height: 50,
@@ -93,7 +113,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                   child: Row(
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      expenseMap[index]['type'] == "expense"? Padding(
+              allexpenseincomeMap[index]['type'] == "Expense"? Padding(
                         padding:  EdgeInsets.symmetric(horizontal: 15.0),
                         child: Text("-", style: TextStyle(
                             color: Colors.red,fontSize: 50)),
@@ -107,11 +127,11 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
 
-                          Text("Category Name: ${ expenseMap[index]['categoryName']}",
+                          Text("Category Name: ${ allexpenseincomeMap[index]['categoryName']}",
                             style: TextStyle(
                                 color: Colors.black,fontSize: 16)
                             ,),
-                          Text("Payment : ${ expenseMap[index]['payment']}",
+                          Text("Payment : ${ allexpenseincomeMap[index]['payment']}",
                             style: TextStyle(
                                 color: Colors.black,fontSize: 16)
                             ,),
@@ -127,11 +147,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         ]
       ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: ()async { bool x = await  Navigator.push(context, MaterialPageRoute(builder: (context) => AddIncome(currentDate)));},
-        backgroundColor: Colors.red,
-          child: Icon(Icons.add),
-      ),
+     
     );
   }
 }
