@@ -56,6 +56,81 @@ class _MainPageState extends State<MainPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+          ValueListenableBuilder<bool>(
+            valueListenable: goal_reached_notification,
+            builder: (context, value, child) { return goal_reached_notification.value == true? Padding(
+              padding:  EdgeInsets.only(bottom: 20.0),
+              child: Container(
+                padding: EdgeInsets.all(8),
+                alignment: Alignment.center,
+                height: 70,
+                width: 400,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow:  [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(
+                        0,
+                        2.0,
+                      ),
+                      blurRadius: 3.0,
+                      spreadRadius: 1.0,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.notification_important_rounded, color: Colors.red,),
+                    Text("You have almost reached your daily\n expense goal!",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ],
+                ),
+                ),
+              ): Container();}),
+              ValueListenableBuilder<bool>(
+              valueListenable: goal_exceeded_notification,
+              builder: (context, value, child) { return goal_exceeded_notification.value == true?
+              Padding(
+              padding:  EdgeInsets.only(bottom: 20.0),
+              child: Container(
+                padding: EdgeInsets.all(8),
+                alignment: Alignment.center,
+                height: 70,
+                width: 400,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow:  [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(
+                        0,
+                        2.0,
+                      ),
+                      blurRadius: 3.0,
+                      spreadRadius: 1.0,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.notification_important_rounded, color: Colors.red,),
+                    Text("You have  exceeded your daily  expense goal!",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ):Container();}),
             Container(
               padding: EdgeInsets.all(20),
               height: 200,

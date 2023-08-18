@@ -187,7 +187,8 @@ class _SingUpState extends StateMVC<SingUp>  {
                     print(user.name);
                     print(user.email);
                     print(user.password);
-                    postData(nameController.value.text, emailController.value.text, passController.value.text);
+                    _con.CreateUser(user);
+                    //postData(nameController.value.text, emailController.value.text, passController.value.text);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
                   }
                 },

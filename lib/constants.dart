@@ -30,14 +30,32 @@ ValueNotifier<String> UserName =ValueNotifier("");
 ValueNotifier<String> UserEmail =ValueNotifier("");
 ValueNotifier<String> UserPass =ValueNotifier("");
 ValueNotifier<int> UserId =ValueNotifier(1);
-
+ValueNotifier<String> goal1 =ValueNotifier("");
+ValueNotifier<bool> goal_reached_notification =ValueNotifier(false);
+ValueNotifier<bool> goal_exceeded_notification =ValueNotifier(false);
+ValueNotifier<int> goal =ValueNotifier(0);
 
 
 Map<String, List> selectedExpenseMap = {};
 Map<String, List<String>> expenseMap1 = {};
 Map<String, List> incomeMap = {};
+bool toggle = false;
 
 List<Map> accumulatedExpense = [];
+
+goal_notification(int goal, int total ){
+  if(goal >= total*.9 && goal < total ){
+
+    goal_reached_notification.value = true;
+    print(goal_reached_notification.value);
+    return goal_reached_notification.value;
+  }
+  if(goal > total){
+    goal_exceeded_notification.value = true;
+    return goal_exceeded_notification.value;
+
+  }
+}
 
 eventLoader(List expenseMap){
   selectedExpenseMap = {};
@@ -56,38 +74,6 @@ eventLoader(List expenseMap){
   return selectedExpenseMap;
 }
 
-String getDayName(DateTime dateTime){
-  switch(dateTime.weekday){
-    case 1:
-      return "mon";
-    case 2:
-      return "tue";
-    case 3:
-      return "wed";
-    case 4:
-      return "thurs";
-    case 5:
-      return "fri";
-    case 6:
-      return "sat";
-    case 7:
-      return "sun";
-    default:
-      return "";
-  }
-}
-DateTime startofWeekDate(){
-  DateTime? startofWeek;
-  DateTime today = DateTime.now();
-
-  for(int i = 0; i < 7; i++){
-    if( getDayName(today.subtract(Duration(days: i))) == "sun"){
-      startofWeek = today.subtract(Duration(days: i));
-    }
-  }
-  return startofWeek!;
-
-}
 
  weekdayExpenseAmount(String date, String payment) {
   String inputDate = "2023-08-15";

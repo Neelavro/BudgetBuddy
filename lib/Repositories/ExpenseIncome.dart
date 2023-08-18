@@ -9,7 +9,7 @@ import '../constants.dart';
 
 
 getAllIncomeExpense(int id) async {
-  final response = await http.get(Uri.parse('https://4295-103-205-71-145.ngrok-free.app/api/inex/user/$id'));
+  final response = await http.get(Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/inex/user/$id'));
   List result = jsonDecode(response.body);
   allexpenseincomeMap = result;
   print(result);
@@ -17,7 +17,7 @@ getAllIncomeExpense(int id) async {
 }
 
 Future<void> postIncomeExpense(int y, String p, String q, String r, String s) async {
-  final url = Uri.parse('https://4295-103-205-71-145.ngrok-free.app/api/inex/');
+  final url = Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/inex/');
   int z = int.parse(r);
   final response = await http.post(
     url,

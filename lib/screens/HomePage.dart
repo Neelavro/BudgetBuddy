@@ -1,5 +1,6 @@
 import 'package:budget_buddy/Repositories/ExpenseIncome.dart';
 import 'package:budget_buddy/screens/AddExpense.dart';
+import 'package:budget_buddy/screens/AddGoal.dart';
 import 'package:budget_buddy/screens/AddIncome.dart';
 import 'package:budget_buddy/screens/Login.dart';
 import 'package:budget_buddy/screens/Main.dart';
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     print(currentDate);
     expenseTracker(allexpenseincomeMap);
     incomeTracker(allexpenseincomeMap);
-    _controller = new TabController(length: 3, vsync: this, initialIndex: 0)
+    _controller = new TabController(length: 4, vsync: this, initialIndex: 0)
       ..addListener(() {});
     //print(_focusedDay);
     setState(() {
@@ -126,14 +127,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 print("currentDate: $currentDate");
                 postIncomeExpense(UserId.value, "Expense", titleController.value.text, descpController.value.text, currentDate);
                 weekdayExpenseAmount(currentDate.substring(0,10), descpController.value.text);
-                getAllIncomeExpense(UserId.value);
+                //getAllIncomeExpense(UserId.value);
                 eventLoader(allexpenseincomeMap);
                 weekdayExpenseAmount(currentDate.substring(0,10), descpController.value.text);
-                //incomeTracker(allexpenseincomeMap);
-
                 setState(() {
                 });
-
                 titleController.clear();
                 descpController.clear();
                 Navigator.pop(context);
@@ -163,12 +161,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 eventLoader(allexpenseincomeMap);
                 postIncomeExpense(UserId.value, "Income", titleController.value.text, descpController.value.text, currentDate);
                 weekdayIncomeAmount(currentDate.toString().substring(0,10), descpController.value.text);
-                getAllIncomeExpense(UserId.value);
-
                 eventLoader(allexpenseincomeMap);
                 _selectedDate = _focusedDay;
-                //expenseTracker(allexpenseincomeMap);
-
                 setState(() {
                 });
 
@@ -183,11 +177,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
   }
-  int _currentTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    _controller.animateTo(_currentTabIndex);
     return WillPopScope(
       onWillPop: ()async{
         return false;
@@ -223,8 +215,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             tabs: [
               Text("MAIN"),
               Text("CALENDER"),
-              Text("TRANSACTION HISTORY"),
-
+              Text("Balence Sheet"),
+              Text("GOALS"),
             ],
           ),
         ),
@@ -234,10 +226,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           MainPage(),
             EventCalendarScreen(),
           TransactionHistory(),
-
-
+            AddGoal(),
         ],
-
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: ()async{

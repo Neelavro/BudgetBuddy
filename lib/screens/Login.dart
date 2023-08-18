@@ -1,8 +1,10 @@
 import 'package:budget_buddy/screens/LandingPage.dart';
 import 'package:budget_buddy/screens/SingnUp.dart';
 import 'package:flutter/material.dart';
+import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
 
+import '../Controller/UserController.dart';
 import '../Repositories/UserRepository.dart';
 import '../constants.dart';
 import 'HomePage.dart';
@@ -13,10 +15,16 @@ class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends StateMVC<Login>  {
+  late UserController _con;
+
+  _LoginState() : super(UserController()) {
+    /// Acquire a reference to the passed Controller.
+    _con = controller as UserController;
+  }
   final emailController = TextEditingController();
   final passController = TextEditingController();
 
@@ -103,18 +111,17 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: EdgeInsets.only(top: 55,left: 30,right: 30),
                 child: MaterialButton(
-                  onPressed: ()async{
-                    var x  = await getCurrentUser(emailController.value.text);
-                    if(UserEmail.value == emailController.value.text && UserPass.value == passController.value.text){
-                      print("success");
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LandingPage()));
-                    }
+                  onPressed: ()async {
+                    //_con.getcurrentUser(emailController.value.text);
+
+                    //var x  = await getCurrentUser(emailController.value.text);
+
                     if (emailController.value.text.isEmpty ||
-                        passController.value.text.isEmpty ) {
+                        passController.value.text.isEmpty) {
                       final snackBar = SnackBar(
-                        content: const Text(
-                            'Please fill the required fields'),
-                        backgroundColor: (Colors.black12),
+                        content:  Text(
+                            'Please fill the required fields', style: TextStyle(color: primarycolor),),
+                        backgroundColor: (Colors.white),
                         action: SnackBarAction(
                           label: 'Dismiss',
                           onPressed: () {
@@ -124,6 +131,29 @@ class _LoginState extends State<Login> {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
+                    var x  = await _con.getcurrentUser(emailController.value.text);
+                    if (UserEmail.value != emailController.value.text ||
+                        UserPass.value != passController.value.text) {
+                      final snackBar = SnackBar(
+                        content:  Text(
+                            'Incorrect email or password' ,style: TextStyle(color: primarycolor)),
+                        backgroundColor: (Colors.white),
+                        action: SnackBarAction(
+                          label: 'Dismiss',
+                          onPressed: () {
+                            // Navigator.pushNamed(context,'/signup');
+                          },
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                    if (UserEmail.value == emailController.value.text &&
+                        UserPass.value == passController.value.text) {
+                      print("success");
+                      Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (context) => LandingPage()));
+                    }
+
                   },
                   child: Container(
                     alignment: Alignment.center,

@@ -8,10 +8,12 @@ import '../Models/User.dart';
 class UserController extends ControllerMVC{
   User user = User();
 
-  Future<bool> CreateUser(User user)async {
-    // book.id = id;
-    var response = await UserCreate(user);
-    return response;
+  Future<void> CreateUser(User user)async {
+    var response = await createuser(user);
+  }
+
+  Future<void> getcurrentUser(String email)async {
+    var response = await getCurrentUser(email);
   }
 
 }

@@ -8,7 +8,7 @@ import 'dart:core';
 
 
 Future UserCreate(User user) async {
-  Uri url = Uri.parse("https://4295-103-205-71-145.ngrok-free.app/user/");
+  Uri url = Uri.parse("https://8806-103-205-71-145.ngrok-free.app/api/user/");
   print(url.data);
   bool x = false;
   print(user.email);
@@ -24,7 +24,7 @@ Future UserCreate(User user) async {
 }
 
 getAllUsers() async {
-  final response = await http.get(Uri.parse('https://4295-103-205-71-145.ngrok-free.app/api/user/'));
+  final response = await http.get(Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/user/'));
   List result = jsonDecode(response.body);
   print(result);
   return result;
@@ -32,7 +32,7 @@ getAllUsers() async {
 }
 
 getCurrentUser(String email) async {
-  final response = await http.get(Uri.parse('https://4295-103-205-71-145.ngrok-free.app/api/user/email/$email'));
+  final response = await http.get(Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/user/email/$email'));
   Map result = jsonDecode(response.body);
   UserName.value = result['user']['name'].toString();
   UserEmail.value = result['user']['email'].toString();
@@ -44,13 +44,38 @@ getCurrentUser(String email) async {
 
 }
 Future<void> postData(String x, String y, String z) async {
-  final url = Uri.parse('https://4295-103-205-71-145.ngrok-free.app/api/user/');
+  final url = Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/user/');
   final response = await http.post(
     url,
     body: json.encode({
       'name': x,
       'email': y,
       'password' : z,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+
+  );
+
+  if (response.statusCode == 200) {
+    // Successful POST request
+    print('Post request successful');
+    print('Response: ${response.body}');
+  } else {
+    // Error in POST request
+    print('Failed to make POST request. Status code: ${response.statusCode}');
+  }
+}
+
+Future<void> createuser(User user) async {
+  final url = Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/user/');
+  final response = await http.post(
+    url,
+    body: json.encode({
+      'name': user.name,
+      'email': user.email,
+      'password' : user.password,
     }),
     headers: {
       'Content-Type': 'application/json',
