@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 double sunAmount  = 0;
 double monAmount  = 0;
@@ -22,15 +21,16 @@ double thurIncomeAmount  = 0;
 double friIncomeAmount  = 0;
 double satIncomeAmount  = 0;
 
-
 List allexpenseincomeMap =[
 ];
 ValueNotifier<String> UserName =ValueNotifier("");
+//ValueNotifier<String> currentDate =ValueNotifier("");
+String currentDate = '';
 
 ValueNotifier<String> UserEmail =ValueNotifier("");
 ValueNotifier<String> UserPass =ValueNotifier("");
 ValueNotifier<int> UserId =ValueNotifier(1);
-ValueNotifier<String> goal1 =ValueNotifier("");
+ValueNotifier<String> goal1 =ValueNotifier("0");
 ValueNotifier<bool> goal_reached_notification =ValueNotifier(false);
 ValueNotifier<bool> goal_exceeded_notification =ValueNotifier(false);
 ValueNotifier<int> goal =ValueNotifier(0);
@@ -44,15 +44,16 @@ bool toggle = false;
 List<Map> accumulatedExpense = [];
 
 goal_notification(int goal, int total ){
-  if(goal >= total*.9 && goal < total ){
+  if(goal == 0){
+    goal_exceeded_notification.value = false;
+    goal_reached_notification.value = false;
 
-    goal_reached_notification.value = true;
-    print(goal_reached_notification.value);
-    return goal_reached_notification.value;
   }
-  if(goal > total){
+  else if(total >= goal*.9 && total < goal ){
+    goal_reached_notification.value = true;
+  }
+  else if(total > goal){
     goal_exceeded_notification.value = true;
-    return goal_exceeded_notification.value;
 
   }
 }

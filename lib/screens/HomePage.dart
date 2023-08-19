@@ -1,3 +1,4 @@
+import 'package:budget_buddy/Models/IncomeExpense.dart';
 import 'package:budget_buddy/Repositories/ExpenseIncome.dart';
 import 'package:budget_buddy/screens/AddExpense.dart';
 import 'package:budget_buddy/screens/AddGoal.dart';
@@ -23,17 +24,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _controller;
-  String currentDate = '';
   bool toggle = true;
+  DateTime _focusedDay = DateTime.now();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    currentDate = _focusedDay.toString();
     print(allexpenseincomeMap);
     totalExpenses();
     totalIncome();
     eventLoader(allexpenseincomeMap);
-    currentDate = _focusedDay.toString();
     print(currentDate);
     expenseTracker(allexpenseincomeMap);
     incomeTracker(allexpenseincomeMap);
@@ -66,7 +68,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
   CalendarFormat _calendarFormat =  CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
+  //DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
   final titleController = TextEditingController();
   final descpController = TextEditingController();
@@ -118,18 +120,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 //Navigator.pop(context);
                 return;
               } else {
-
+                IncomeExpense expense_obj = IncomeExpense();
+                expense_obj.userId = UserId.value;
+                expense_obj.type = "Expense";
+                expense_obj.categoryName = titleController.value.text;
+                expense_obj.payment = int.parse(descpController.value.text);
+                expense_obj.date = currentDate;
                 expense.value = expense.value + int.parse(descpController.value.text);
                 total.value = total.value - int.parse(descpController.value.text);
-                //weekdayExpenseAmount(_selectedDate.toString().substring(0,10), descpController.value.text);
                 addExpensse({"userId": UserId.value,"type": "Expense","categoryName": titleController.value.text,"payment": int.parse(descpController.value.text),"date": currentDate});
                 eventLoader(allexpenseincomeMap);
                 print("currentDate: $currentDate");
-                postIncomeExpense(UserId.value, "Expense", titleController.value.text, descpController.value.text, currentDate);
+                postIncomeExpense(expense_obj);
                 weekdayExpenseAmount(currentDate.substring(0,10), descpController.value.text);
-                //getAllIncomeExpense(UserId.value);
                 eventLoader(allexpenseincomeMap);
                 weekdayExpenseAmount(currentDate.substring(0,10), descpController.value.text);
+                goal_notification(int.parse(goal1.value), expense.value);
                 setState(() {
                 });
                 titleController.clear();
@@ -153,19 +159,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 //Navigator.pop(context);
                 return;
               } else {
-                print(titleController.text);
-                print(descpController.text);
+                IncomeExpense income_obj = IncomeExpense();
+                income_obj.userId = UserId.value;
+                income_obj.type = "Income";
+                income_obj.categoryName = titleController.value.text;
+                income_obj.payment = int.parse(descpController.value.text);
+                income_obj.date = currentDate;
                 income.value = income.value + int.parse(descpController.value.text);
                 total.value = total.value + int.parse(descpController.value.text);
-                addIncome({"userId": UserId.value,"type": "Expense","categoryName": titleController.value.text,"payment": int.parse(descpController.value.text),"date": currentDate});
+                addIncome({"userId": UserId.value,"type": "Income","categoryName": titleController.value.text,"payment": int.parse(descpController.value.text),"date": currentDate});
+                print(currentDate);
                 eventLoader(allexpenseincomeMap);
-                postIncomeExpense(UserId.value, "Income", titleController.value.text, descpController.value.text, currentDate);
+                postIncomeExpense(income_obj);
                 weekdayIncomeAmount(currentDate.toString().substring(0,10), descpController.value.text);
                 eventLoader(allexpenseincomeMap);
-                _selectedDate = _focusedDay;
                 setState(() {
                 });
-
                 titleController.clear();
                 descpController.clear();
                 Navigator.pop(context);

@@ -32,7 +32,7 @@ getAllUsers() async {
 }
 
 getCurrentUser(String email) async {
-  final response = await http.get(Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/user/email/$email'));
+  final response = await http.get(Uri.parse('https://27d9-103-205-71-145.ngrok-free.app/api/user/email/$email'));
   Map result = jsonDecode(response.body);
   UserName.value = result['user']['name'].toString();
   UserEmail.value = result['user']['email'].toString();
@@ -44,7 +44,7 @@ getCurrentUser(String email) async {
 
 }
 Future<void> postData(String x, String y, String z) async {
-  final url = Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/user/');
+  final url = Uri.parse('https://27d9-103-205-71-145.ngrok-free.app/api/user/');
   final response = await http.post(
     url,
     body: json.encode({
@@ -69,7 +69,7 @@ Future<void> postData(String x, String y, String z) async {
 }
 
 Future<void> createuser(User user) async {
-  final url = Uri.parse('https://8806-103-205-71-145.ngrok-free.app/api/user/');
+  final url = Uri.parse('https://27d9-103-205-71-145.ngrok-free.app/api/user/');
   final response = await http.post(
     url,
     body: json.encode({

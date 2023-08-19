@@ -18,7 +18,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
-   String currentDate = '';
 
   final titleController = TextEditingController();
   final descpController = TextEditingController();
@@ -28,6 +27,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
     // TODO: implement initState
     super.initState();
     _selectedDate = _focusedDay;
+    currentDate = _selectedDate.toString();
     //eventLoader(expenseMap);
 
   }
@@ -58,8 +58,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       //   ),
       //
       // ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
+      body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
           TableCalendar(
@@ -71,8 +71,9 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
               setState(() {
                 _selectedDate = selectedDay;
                 _focusedDay = focusedDay;
-                currentDate = _selectedDate.toString().substring(0,10);
-                print(currentDate);
+                currentDate = _selectedDate.toString();
+                print(_selectedDate);
+                print(allexpenseincomeMap);
 
               });
             }
@@ -105,7 +106,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
             //physics: NeverScrollableScrollPhysics(),
             itemCount: allexpenseincomeMap.length,
             itemBuilder: (context, index){
-              return currentDate.toString() == allexpenseincomeMap[index]['date'].toString().substring(0,10) || _focusedDay.toString().substring(0,10) ==  allexpenseincomeMap[index]['date'] ? Padding(
+              return currentDate.toString().substring(0,10) == allexpenseincomeMap[index]['date'].toString().substring(0,10)  ? Padding(
                 padding:  EdgeInsets.only(top: 10.0),
                 child: Container(
                   height: 50,
@@ -145,7 +146,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
           ),
         )
         ]
-      ),
+        ),
       ),
      
     );

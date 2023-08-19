@@ -43,6 +43,7 @@ class _AddGoalState extends State<AddGoal> {
               toggle = true;
               goal1.value = setGoalController.value.text;
               goal_notification(int.parse(setGoalController.value.text), expense.value);
+              print(goal1.value);
               setState(() {
               });
               Navigator.pop(context);
@@ -108,7 +109,7 @@ class _AddGoalState extends State<AddGoal> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Daily Expense Goal: ${setGoalController.value.text} BDT",
+                      Text("Daily Expense Goal: ${goal1.value} BDT",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,

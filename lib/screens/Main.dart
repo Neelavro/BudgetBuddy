@@ -32,7 +32,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-  ;_selectedDate = _focusedDay;
+    _selectedDate = _focusedDay;
     print(_focusedDay);
     setState(() {
     });
@@ -45,7 +45,6 @@ class _MainPageState extends State<MainPage> {
       return [];
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -275,9 +274,7 @@ class _MainPageState extends State<MainPage> {
                       focusedDay: _focusedDay, firstDay: DateTime(2000), lastDay: DateTime(2222),
                       calendarFormat: _calendarFormat,
                       onDaySelected: (selectedDay, focusedDay) {
-                        _controller.animateTo(2);
                         setState(() {
-
                         });
                         //Navigator.push(context, MaterialPageRoute(builder: (context) => EventCalendarScreen()));
                       },
